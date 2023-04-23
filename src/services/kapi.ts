@@ -43,7 +43,7 @@ class KApi {
       `/v1/modules/1/operators`
     );
 
-    return res.data.data;
+    return res.data.data.operators;
   }
 
   async findOperatorKeys(operatorIndex: number) {
@@ -56,7 +56,7 @@ class KApi {
       }
     );
 
-    return res.data.data;
+    return res.data.data.keys;
   }
 }
 
