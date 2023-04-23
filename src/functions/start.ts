@@ -1,12 +1,8 @@
-import appConfig from "../config";
-import logger from "../config/logger";
-import ETH from "../services/eth";
-import KApi from "../services/kapi";
-import { notifyToAll } from "../services/notify";
 import { markdownv2 as format } from "telegram-format";
-
-const kapi = new KApi(appConfig.kapiUrl);
-const eth = new ETH(appConfig.ethUrl);
+import eth from "../config/eth";
+import kapi from "../config/kapi";
+import logger from "../config/logger";
+import { notifyToAll } from "../services/notify";
 
 export const startLoop = async () => {
   try {

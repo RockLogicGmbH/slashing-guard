@@ -18,6 +18,24 @@ interface KApiKey {
   used: boolean;
   index: number;
 }
+
+interface GetStatusResponse {
+  appVersion: string;
+  chainId: number;
+  elBlockSnapshot: {
+    blockNumber: number;
+    blockHash: string;
+    timestamp: number;
+  };
+  clBlockSnapshot: {
+    epoch: number;
+    root: string;
+    slot: number;
+    blockNumber: number;
+    timestamp: number;
+    blockHash: number;
+  };
+}
 interface GetOperatorsResponse {
   data: {
     operators: Array<KApiOperator>;
@@ -36,6 +54,12 @@ class KApi {
 
   constructor(url: string) {
     this.agent = axios.create({ baseURL: url });
+  }
+
+  async getStatus() {
+    const res = await this.agent.get<GetStatusResponse>(`/v1/status`);
+
+    return res.data;
   }
 
   async getOperators() {

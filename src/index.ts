@@ -8,6 +8,11 @@ schedule.scheduleJob("*/12 * * * * *", async () => {
 });
 
 bot.start({
-  onStart: (info) =>
-    logger.info(`@${info.username} telegram bot is up and running...`),
+  onStart: async (info) => {
+    logger.info(`@${info.username} telegram bot is up and running...`);
+    await bot.api.setMyCommands([
+      { command: "start", description: "Start the bot" },
+      { command: "status", description: "Show service status" },
+    ]);
+  },
 });
