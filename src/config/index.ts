@@ -3,13 +3,17 @@ import dotenv from "dotenv";
 dotenv.config({ path: `${__dirname}/../../.env` });
 
 interface AppConfig {
-  telegram_bot_token: string;
+  telegramBotToken: string;
+  ethUrl: string;
+  kapiUrl: string;
 }
 
-const { TELEGRAM_BOT_TOKEN } = process.env;
+const { TELEGRAM_BOT_TOKEN, ETH_URL, KAPI_URL } = process.env;
 
 const appConfig: AppConfig = {
-  telegram_bot_token: TELEGRAM_BOT_TOKEN as string,
+  telegramBotToken: TELEGRAM_BOT_TOKEN as string,
+  ethUrl: ETH_URL as string,
+  kapiUrl: KAPI_URL as string,
 };
 
 export default appConfig;
