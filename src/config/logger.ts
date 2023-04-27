@@ -7,13 +7,17 @@ const transport = pino.transport({
       target: "pino/file",
       options: { destination: `${__dirname}/../../app.log` },
     },
-    {
-      level: "info",
-      target: "pino-pretty",
-      options: {
-        colorize: true,
-      },
-    },
+    ...(process.env.NODE_ENV === "development"
+      ? [
+          {
+            level: "info",
+            target: "pino-pretty",
+            options: {
+              colorize: true,
+            },
+          },
+        ]
+      : []),
   ],
 });
 

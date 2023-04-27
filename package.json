@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "npx nodemon | pino-pretty",
-    "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js"
+    "start": "ts-node dist/index.js",
+    "build": "tsc -p ."
+
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,6 @@
     "@types/node-schedule": "^2.1.0",
     "nodemon": "^2.0.22",
     "pino-pretty": "^10.0.0",
-    "rimraf": "^5.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
