@@ -1,23 +1,15 @@
-import pino from "pino";
+const pino = require("pino");
 
 const transport = pino.transport({
   targets: [
     {
-      level: "info",
       target: "pino/file",
-      options: { destination: `${__dirname}/../../app.log` },
+      level: "error",
+      options: { destination: `${__dirname}/app.log` },
     },
-    ...(process.env.NODE_ENV === "development"
-      ? [
-          {
-            level: "info",
-            target: "pino-pretty",
-            options: {
-              colorize: true,
-            },
-          },
-        ]
-      : []),
+    {
+      target: "pino/file", // logs to the standard output by default
+    },
   ],
 });
 

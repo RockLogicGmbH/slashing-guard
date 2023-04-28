@@ -7,7 +7,6 @@
     "start:dev": "npx nodemon | pino-pretty",
     "start": "ts-node dist/index.js",
     "build": "tsc -p ."
-
   },
   "keywords": [],
   "author": "",
