@@ -15,7 +15,7 @@ type EthValidatorStatus =
   | "exited"
   | "withdrawal";
 
-interface GetStateValidatorsResponse {
+export interface GetStateValidatorsResponse {
   execution_optimistic: boolean;
   finalized: boolean;
   data: Array<{

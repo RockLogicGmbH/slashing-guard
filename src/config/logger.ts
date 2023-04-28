@@ -5,7 +5,7 @@ const transport = pino.transport({
     {
       target: "pino/file",
       level: "error",
-      options: { destination: `${__dirname}/app.log` },
+      options: { destination: `${__dirname}/../../app.log` },
     },
     {
       target: "pino/file", // logs to the standard output by default
