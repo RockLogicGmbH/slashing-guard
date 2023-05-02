@@ -10,9 +10,12 @@ class User {
   }
 
   async find() {
-    const users = await this.db.get(this.key);
-
-    return JSON.parse(users) as Array<number>;
+    try {
+      const users = await this.db.get(this.key);
+      return JSON.parse(users) as Array<number>;
+    } catch (error) {
+      return [];
+    }
   }
 
   async add(userId: number) {
@@ -25,8 +28,24 @@ class User {
     }
 
     if (!users.includes(userId)) {
-      await this.db.put(this.key, JSON.stringify([...users, userId]));
+      users = [...users, userId];
+      await this.db.put(this.key, JSON.stringify(users));
     }
+
+    return userId;
+  }
+
+  async delete(userId: number) {
+    let users: number[];
+
+    try {
+      users = await this.find();
+    } catch (error) {
+      return userId;
+    }
+
+    users = users.filter((key) => key !== userId);
+    await this.db.put(this.key, JSON.stringify(users));
 
     return userId;
   }

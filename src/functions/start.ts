@@ -1,29 +1,71 @@
+import appConfig from "../config";
 import { markdownv2 as format } from "telegram-format";
 import db from "../config/db";
 import eth from "../config/eth";
 import kapi from "../config/kapi";
 import logger from "../config/logger";
 import SlashedValidator from "../data/SlashedValidator";
+import FailedMessage from "../data/FailedMessage";
 import { notifyToAll } from "../services/notify";
+import { notifyToFailed } from "../services/notify";
 
+const operatorName = appConfig.operatorName;
+const fakeKeys = appConfig.fakeKeys;
+const validatorChains = appConfig.validatorChains;
 const slashedValidatorsDB = new SlashedValidator(db);
 
-export const startLoop = async () => {
+export const startLoop = async (init: boolean = false) => {
   try {
+    if (!operatorName) {
+      logger.error(`No operator name given`);
+      process.exit(3);
+      // return;
+    }
+    if (init) {
+      logger.info(
+        `System ready, listening for state changes of ${operatorName} validators...`
+      );
+    }
+    const kapiStatus = await kapi.getStatus();
     const kapiOperators = await kapi.getOperators();
-    const rockLogicOperatorIndex = kapiOperators.find(
-      (op) => op.name === "RockLogic"
+    const operatorIndex = kapiOperators.find(
+      (op) => op.name === operatorName
     )?.index;
 
-    if (!rockLogicOperatorIndex) return;
+    if (!operatorIndex) {
+      logger.error(`Operator ${operatorName} unknown`);
+      process.exit(3);
+      // return;
+    }
 
-    const rockLogicKeys = await kapi.findOperatorKeys(rockLogicOperatorIndex);
+    const validatorChain = validatorChains.find(
+      (e) => e.key == kapiStatus.chainId
+    );
+    const validatorUrl =
+      validatorChain && validatorChain.hasOwnProperty("url")
+        ? validatorChain.url
+        : "https://beaconcha.in/validator/";
+
+    const operatorKeys = await kapi.findOperatorKeys(operatorIndex);
 
     const currentSlashedValidators = await eth.getStateValidators({
       stateId: "head",
-      validatorIds: rockLogicKeys.map((ky) => ky.key),
-      status: ["active_slashed", "exited_slashed"],
+      validatorIds: operatorKeys.map((ky) => ky.key),
+      status: fakeKeys ? [] : ["active_slashed", "exited_slashed"],
     });
+
+    if (fakeKeys) {
+      logger.trace("Fake keys specified:");
+      for (let fakeKey of fakeKeys) {
+        logger.trace(`- ${fakeKey}`);
+      }
+      currentSlashedValidators["data"] = currentSlashedValidators.data.filter(
+        (item) => fakeKeys.includes(item.validator.pubkey)
+      );
+      for (let slashed of currentSlashedValidators.data) {
+        logger.debug(`Fake validator as slashed: ${slashed.validator.pubkey}`);
+      }
+    }
 
     const pastSlashedValidatorPubKeys = await slashedValidatorsDB.find();
 
@@ -36,12 +78,29 @@ export const startLoop = async () => {
       });
 
       pastSlashedValidators = pastSlashedValidatorsRes.data;
+
+      if (fakeKeys) {
+        pastSlashedValidators = pastSlashedValidators.map((item) => {
+          if (fakeKeys.includes(item.validator.pubkey)) {
+            logger.debug(
+              `Keep past validator fake slashed: ${item.validator.pubkey}`
+            );
+            const newValidator = { ...item.validator, slashed: true };
+            return { ...item, validator: newValidator };
+          }
+          return item;
+        });
+      }
     }
 
     if (pastSlashedValidators) {
+      let publicKeys;
       for (const pastValidator of pastSlashedValidators) {
         if (pastValidator.validator.slashed === false) {
           await slashedValidatorsDB.delete(pastValidator.validator.pubkey);
+          logger.info(
+            `Removed past slashed validator from reporting db: ${pastValidator.validator.pubkey}`
+          );
         }
       }
     }
@@ -52,21 +111,34 @@ export const startLoop = async () => {
       .filter((key) => !updatedPastSlashedPubKeys.includes(key));
 
     if (slashedValidatorsPubKeys.length === 0) {
-      logger.info(`All good, can't find any slashed validator.`);
+      if (updatedPastSlashedPubKeys.length) {
+        logger.debug(
+          `Found slashed validator${
+            updatedPastSlashedPubKeys.length > 1 ? "s" : ""
+          } - subscribers are already pinged`
+        );
+        for (let pastkey of updatedPastSlashedPubKeys) {
+          logger.debug(`Slashed validator already reported: ${pastkey}`);
+        }
+        await notifyToFailed();
+      } else {
+        logger.debug(`All good, can't find any unreported slashed validator`);
+      }
       return;
     }
 
+    logger.warn(
+      `Found slashed validator${
+        slashedValidatorsPubKeys.length > 1 ? "s" : ""
+      } - sending alert to subscribers`
+    );
+
     for (const pubKey of slashedValidatorsPubKeys) {
+      logger.info(`Added slashed validator to reporting db: ${pubKey}`);
       await slashedValidatorsDB.add(pubKey);
     }
 
-    const message = `${format.bold(
-      "🚨 Slashing alert: "
-    )} \nList of public keys:\n${slashedValidatorsPubKeys
-      .map((key) => `${format.underline(key)}`)
-      .join("\n")}`;
-
-    await notifyToAll(message);
+    await notifyToAll(slashedValidatorsPubKeys, validatorUrl);
   } catch (error) {
     logger.error(error);
   }
