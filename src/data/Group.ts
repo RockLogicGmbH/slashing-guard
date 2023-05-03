@@ -43,10 +43,7 @@ class Group {
       return chatId;
     }
 
-    await this.db.put(
-      this.key,
-      JSON.stringify(groups.filter((key) => key !== chatId))
-    );
+    await this.db.put(this.key, JSON.stringify(groups.filter((key) => key !== chatId)));
 
     return chatId;
   }

@@ -51,15 +51,12 @@ class ETH {
     validatorIds: string[];
     status: EthValidatorStatus[];
   }) {
-    const res = await this.agent.get<GetStateValidatorsResponse>(
-      `/eth/v1/beacon/states/${stateId}/validators`,
-      {
-        params: {
-          id: validatorIds.join(","),
-          status: status.join(","),
-        },
-      }
-    );
+    const res = await this.agent.get<GetStateValidatorsResponse>(`/eth/v1/beacon/states/${stateId}/validators`, {
+      params: {
+        id: validatorIds.join(","),
+        status: status.join(","),
+      },
+    });
 
     return res.data;
   }

@@ -63,22 +63,17 @@ class KApi {
   }
 
   async getOperators() {
-    const res = await this.agent.get<GetOperatorsResponse>(
-      `/v1/modules/1/operators`
-    );
+    const res = await this.agent.get<GetOperatorsResponse>(`/v1/modules/1/operators`);
 
     return res.data.data.operators;
   }
 
   async findOperatorKeys(operatorIndex: number) {
-    const res = await this.agent.get<GetOperatorKeysResponse>(
-      `/v1/modules/1/operators/keys`,
-      {
-        params: {
-          operatorIndex,
-        },
-      }
-    );
+    const res = await this.agent.get<GetOperatorKeysResponse>(`/v1/modules/1/operators/keys`, {
+      params: {
+        operatorIndex,
+      },
+    });
 
     return res.data.data.keys;
   }

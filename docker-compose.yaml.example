@@ -1,0 +1,14 @@
+# production configuration example - loads the image from docker hub:
+# docker compose --project-name slashing-guard up
+# docker compose --project-name slashing-guard up -d
+version: "3.7"
+services:
+  slashing-guard:
+    container_name: slashing-guard
+    image: stereum/slashing-guard:latest
+    restart: always
+    volumes:
+      - ./database:/database
+    env_file: .env
+    environment:
+      - NODE_ENV=production

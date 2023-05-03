@@ -49,18 +49,13 @@ bot.command("status", async (ctx) => {
   const operator = kapiOperators.find((op) => op.name === operatorName);
   const operatorIndex = operator?.index;
   if (!operatorIndex) {
-    await ctx.reply(
-      `Unknown operator ${format.bold(format.escape(operatorName))}`,
-      {
-        parse_mode: "MarkdownV2",
-      }
-    );
+    await ctx.reply(`Unknown operator ${format.bold(format.escape(operatorName))}`, {
+      parse_mode: "MarkdownV2",
+    });
     return;
   }
   const operatorKeys = await kapi.findOperatorKeys(operatorIndex);
-  const validatorChain = validatorChains.find(
-    (e) => e.key == kapiStatus.chainId
-  );
+  const validatorChain = validatorChains.find((e) => e.key == kapiStatus.chainId);
   let chainName = validatorChain?.dsc;
   if (chainName == undefined) {
     chainName = "unknown";
@@ -68,18 +63,15 @@ bot.command("status", async (ctx) => {
   const numUsers = (await users.find()).length;
   const numGroups = (await groups.find()).length;
   const fails = await FailedMessagesDB.find();
-  const numFailsOpen = Object.values(fails).reduce(
-    (acc, arr) => acc + arr.length,
-    0
-  );
+  const numFailsOpen = Object.values(fails).reduce((acc, arr) => acc + arr.length, 0);
   const currentSlashedValidators = await eth.getStateValidators({
     stateId: "head",
     validatorIds: operatorKeys.map((ky) => ky.key),
     status: fakeKeys ? [] : ["active_slashed", "exited_slashed"],
   });
   if (fakeKeys) {
-    currentSlashedValidators["data"] = currentSlashedValidators.data.filter(
-      (item) => fakeKeys.includes(item.validator.pubkey)
+    currentSlashedValidators["data"] = currentSlashedValidators.data.filter((item) =>
+      fakeKeys.includes(item.validator.pubkey)
     );
   }
   const numSlashedValidators = currentSlashedValidators.data.length;
@@ -113,17 +105,12 @@ bot.command("operator", async (ctx) => {
   const operator = kapiOperators.find((op) => op.name === operatorName);
   const operatorIndex = operator?.index;
   if (!operatorIndex) {
-    await ctx.reply(
-      `Unknown operator ${format.bold(format.escape(operatorName))}`,
-      {
-        parse_mode: "MarkdownV2",
-      }
-    );
+    await ctx.reply(`Unknown operator ${format.bold(format.escape(operatorName))}`, {
+      parse_mode: "MarkdownV2",
+    });
     return;
   }
-  const validatorChain = validatorChains.find(
-    (e) => e.key == kapiStatus.chainId
-  );
+  const validatorChain = validatorChains.find((e) => e.key == kapiStatus.chainId);
   let chainName = validatorChain?.dsc;
   if (chainName == undefined) {
     chainName = "unknown";

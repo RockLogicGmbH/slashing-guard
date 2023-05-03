@@ -57,11 +57,7 @@ class FailedMessage {
   // get("123") => get Array<FailedMessageData> for telegramId 123
   // get("123",true) => get FailedMessage object filtered for telegramId 123
   // Returns Array<FailedMessageData> or filtered FailedMessage object depending on "asObject"
-  async get(
-    telegramId: number,
-    asObject: boolean | null = false,
-    failedMessages: FailedMessages | null = null
-  ) {
+  async get(telegramId: number, asObject: boolean | null = false, failedMessages: FailedMessages | null = null) {
     const fails: FailedMessages = await this.find(failedMessages);
     const filtered: FailedMessages = {};
     const asArray = !asObject;
@@ -80,7 +76,7 @@ class FailedMessage {
   // Returns filtered FailedMessage object
   async filter(
     by: keyof FailedMessageData | ((item: FailedMessageData) => boolean),
-    val: string = "",
+    val = "",
     failedMessages: FailedMessages | null = null
   ) {
     const fails: FailedMessages = await this.find(failedMessages);
@@ -103,9 +99,7 @@ class FailedMessage {
     const fails: FailedMessages = await this.find(failedMessages);
 
     const failsFiltered = Object.fromEntries(
-      Object.entries(fails).filter(([key, value]) =>
-        value.some((data) => data.hash != hash)
-      )
+      Object.entries(fails).filter(([key, value]) => value.some((data) => data.hash != hash)) // eslint-disable-line @typescript-eslint/no-unused-vars
     );
 
     await this.db.put(this.key, JSON.stringify(failsFiltered));
@@ -132,7 +126,7 @@ class FailedMessage {
       telegramIds = [telegramIds];
     }
 
-    for (let telegramId of telegramIds) {
+    for (const telegramId of telegramIds) {
       if (!fails.hasOwnProperty(telegramId)) {
         continue;
       }
@@ -153,14 +147,10 @@ class FailedMessage {
           .update(JSON.stringify([telegramId, publicKeys, text]))
           .digest("hex");
         console.log("delete by hash", hash);
-        fails[telegramId] = fails[telegramId].filter(
-          (data) => data.hash != hash
-        );
+        fails[telegramId] = fails[telegramId].filter((data) => data.hash != hash);
       } else {
         console.log("delete by publicKeys", publicKeys);
-        fails[telegramId] = fails[telegramId].filter(
-          (data) => !data.publicKeys.some((pk) => publicKeys?.includes(pk))
-        );
+        fails[telegramId] = fails[telegramId].filter((data) => !data.publicKeys.some((pk) => publicKeys?.includes(pk)));
       }
       if (fails[telegramId].length < 1) {
         delete fails[telegramId];
@@ -177,11 +167,7 @@ class FailedMessage {
   // toHash(123, "pubkeyAAA", "msgtextAAA") => returns serialized md5 sum of "['123', ['pubkeyAAA'], 'msgtextAAA']"
   // toHash([889], "pubkeyAAA", "msgtextAAA") => returns an FailedMessageToHash object with serialized md5 sum of "['889', ['pubkeyAAA'], 'msgtextAAA']"
   // Returns FailedMessageToHash object by default or string if telegramIds was a sole number
-  async toHash(
-    telegramIds: number | number[],
-    publicKeys: string | string[],
-    text: string
-  ) {
+  async toHash(telegramIds: number | number[], publicKeys: string | string[], text: string) {
     const results: FailedMessageToHash = {};
 
     if (!Array.isArray(publicKeys)) {
@@ -195,7 +181,7 @@ class FailedMessage {
         .digest("hex");
     }
 
-    for (let telegramId of telegramIds) {
+    for (const telegramId of telegramIds) {
       const hash = crypto
         .createHash("md5")
         .update(JSON.stringify([telegramId, publicKeys, text]))
@@ -229,7 +215,7 @@ class FailedMessage {
       publicKeys = [publicKeys];
     }
 
-    for (let telegramId of telegramIds) {
+    for (const telegramId of telegramIds) {
       const hash = crypto
         .createHash("md5")
         .update(JSON.stringify([telegramId, publicKeys, text]))
@@ -240,9 +226,7 @@ class FailedMessage {
       if (!affectedRows.hasOwnProperty(telegramId)) {
         affectedRows[telegramId] = [];
       }
-      let existingMessage = fails[telegramId]
-        .filter((data) => data.hash == hash)
-        .pop();
+      const existingMessage = fails[telegramId].filter((data) => data.hash == hash).pop();
       if (!existingMessage) {
         const data: FailedMessageData = {
           hash: hash,
