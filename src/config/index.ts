@@ -17,8 +17,7 @@ interface AppConfig {
   validatorChains: Array<ValidatorChain>;
 }
 
-const { TELEGRAM_BOT_TOKEN, ETH_URL, KAPI_URL, OPERATOR_NAME, FAKE_KEYS } =
-  process.env;
+const { TELEGRAM_BOT_TOKEN, ETH_URL, KAPI_URL, OPERATOR_NAME, FAKE_KEYS } = process.env;
 
 const appConfig: AppConfig = {
   telegramBotToken: TELEGRAM_BOT_TOKEN as string,

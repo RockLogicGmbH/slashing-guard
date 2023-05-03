@@ -22,10 +22,7 @@ class SlashedValidator {
   async delete(publicKey: string) {
     const keys = await this.find();
 
-    await this.db.put(
-      this.key,
-      JSON.stringify(keys.filter((key) => key !== publicKey))
-    );
+    await this.db.put(this.key, JSON.stringify(keys.filter((key) => key !== publicKey)));
 
     return publicKey;
   }
