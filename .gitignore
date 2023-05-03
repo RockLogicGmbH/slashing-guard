@@ -128,8 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-database
 
 # other
 .DS_Store
+
+# App
+docker-compose.yaml
+docker-compose.dev.yaml
 package-lock.json
+database
