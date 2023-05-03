@@ -1,4 +1,4 @@
-FROM node:16.13.0-alpine
+FROM node:19-alpine
 
 WORKDIR /usr
 COPY package.json ./
@@ -9,7 +9,7 @@ RUN npm install
 RUN npm run build
 
 ## Stage 2
-FROM node:16.13.0-alpine
+FROM node:19-alpine
 WORKDIR /usr
 COPY package.json ./
 RUN npm install --only=production
