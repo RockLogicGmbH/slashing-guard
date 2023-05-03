@@ -1,0 +1,15 @@
+# development configuration example - builds the image locally:
+# docker compose --project-name dev-slashing-guard -f docker-compose.dev.yaml up
+# docker compose --project-name dev-slashing-guard -f docker-compose.dev.yaml up -d
+version: "3.7"
+services:
+  slashing-guard:
+    container_name: dev-slashing-guard
+    image: dev/slashing-guard
+    pull_policy: build
+    build: .
+    volumes:
+      - ./database:/database
+    env_file: .env
+    environment:
+      - NODE_ENV=development

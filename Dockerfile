@@ -16,4 +16,5 @@ RUN npm install --only=production
 COPY --from=0 /usr/dist .
 RUN npm install pm2 -g
 EXPOSE 80
+ENV __DOCKERIZED__ dockerized
 CMD ["pm2-runtime","index.js"]
