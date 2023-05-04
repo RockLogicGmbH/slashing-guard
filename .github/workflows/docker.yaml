@@ -25,5 +25,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/slashing-guard:latest,${{ secrets.DOCKERHUB_USERNAME }}/slashing-guard:${{github.ref_name}}
+          tags: ${{ secrets.DOCKERHUB_NAMESPACE }}/slashing-guard:latest,${{ secrets.DOCKERHUB_NAMESPACE }}/slashing-guard:${{github.ref_name}}
         if: startsWith(github.ref, 'refs/tags/v')
