@@ -16,8 +16,8 @@ export const startLoop = async (init = false) => {
   try {
     if (!operatorName) {
       logger.error(`No operator name given`);
-      process.exit(3);
-      // return;
+      await new Promise((resolve) => setTimeout(resolve, 15000));
+      return;
     }
     if (init) {
       logger.info(`System ready, listening for state changes of ${operatorName} validators...`);
@@ -28,8 +28,8 @@ export const startLoop = async (init = false) => {
 
     if (!operatorIndex) {
       logger.error(`Operator ${operatorName} unknown`);
-      process.exit(3);
-      // return;
+      await new Promise((resolve) => setTimeout(resolve, 15000));
+      return;
     }
 
     const validatorChain = validatorChains.find((e) => e.key == kapiStatus.chainId);
