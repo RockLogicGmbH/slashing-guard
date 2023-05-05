@@ -1,6 +1,6 @@
 # Slashing Guard
 
-Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO node operators that will alarm you team instantly via [Telegram](https://telegram.org/) if a validator is getting slashed.
+Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO node operators that will alarm your team instantly via [Telegram](https://telegram.org/) if a validator is getting slashed.
 
 # Table of Contents
 
@@ -16,8 +16,7 @@ Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO 
       - [Images](#images)
       - [Quick start with Docker](#quick-start-with-docker)
     - [Run from source](#run-from-source)
-      - [Quick start from source on Windows](#quick-start-from-source-on-windows)
-      - [Quick start from source on Linux and macOS](#quick-start-from-source-on-linux-and-macos)
+      - [Quick start from source](#quick-start-from-source)
       - [Build your Docker image locally](#build-your-docker-image-locally)
   - [Telegram Bot](#telegram-bot)
     - [User Subscription](#user-subscription)
@@ -34,7 +33,7 @@ Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO 
 
 # Requirements and Prerequisites
 
-Before you start with the Slashing Guard applicaton you need to:
+Before you start with the Slashing Guard applicaton you need:
 
 1. API access to a **fully synced** Ethereum Beacon node ([Consensus Client](https://ethereum.org/en/developers/docs/nodes-and-clients/#consensus-clients))
 2. API access to a running [LIDO KAPI service](https://github.com/lidofinance/lido-keys-api)
@@ -52,9 +51,9 @@ Afterwards you can create a new Telegram bot (#4) as follows:
 
 > Make sure you choose the valid one (see the blue verified sign on the screenshot)
 
-3. Store your new bot token on a safe location (you will need that later on!)
+3. Store your new bot token on a safe location (you will need that later on)
 
-As soon as the prerequisites done, the Slashing Guard setup can start.
+As soon as the prerequisites are done, the [Slashing Guard setup can start](#usage).
 
 # Usage
 
@@ -114,7 +113,7 @@ The recommended setup for production environments is to [run the Slashing Guard 
 
 ### Run with Docker
 
-1. Make sure all [requirements and prerequisites](#requirements-and-prerequisites) are done
+1. Verify that all [requirements and prerequisites](#requirements-and-prerequisites) are met.
 2. Pull the Slashing Guard Docker Image ([stereum/slashing-guard](https://hub.docker.com/r/stereum/slashing-guard/tags)) from Docker Hub and follow the [quick start with Docker](#quick-start-with-docker) or [build your Docker image locally](#build-your-docker-image-locally).
 
 #### Images
@@ -132,24 +131,34 @@ cd slashing-guard
 ```
 
 2. Copy [.env.example](./.env.example) to `.env` and [configure](#configuration) as needed
+
+```
+wget -O .env https://raw.githubusercontent.com/stereum-dev/slashing-guard/main/.env.example
+```
+
 3. Copy [docker-compose.yaml.example](./docker-compose.yaml.example) to `docker-compose.yaml`
+
+```
+wget -O docker-compose.yaml https://raw.githubusercontent.com/stereum-dev/slashing-guard/main/docker-compose.yaml.example
+```
+
 4. Start the Slashing Guard Docker container (detached):
 
 ```
-docker-compose --project-name slashing-guard up -d
+sudo docker compose --project-name slashing-guard up -d
 ```
 
 **Important**
 
 Note that the Slashing Guard application is creating a folder called "**database**" inside your application root.
-This is a l[evel-db](https://github.com/google/leveldb) storage used to register and ping your bot subscribers.
+This is a [level-db](https://github.com/google/leveldb) storage used to register and ping your bot subscribers.
 It is highly recommended to regulary backup this database folder to retain your bot subscribers in case of an disaster.
 
 > Deleting the database folder will require all bot subscribers to renew their subscription!
 
 > To monitor logs of your Docker container use `docker logs -f slashing-guard`
 
-> To stop your Docker container use `docker-compose --project-name slashing-guard down`
+> To stop your Docker container use `docker compose --project-name slashing-guard down`
 
 5. Open Telegram and [configure your bot](#telegram-bot)
 
@@ -157,33 +166,15 @@ See the [Telegram Bot](#telegram-bot) section to do so.
 
 ### Run from source
 
-[NodeJS](https://nodejs.org/) and [NPM](https://www.npmjs.com/)
-
 1. Download a release from the [releases page](https://github.com/stereum-dev/slashing-guard/releases) (or clone the GitHub repository).
 2. Refer to the [official NodeJS docs](https://nodejs.org/en/docs) to install [NodeJS >= 16](https://nodejs.org/en/download) on your OS.
 3. Refer to the [official npm docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install **npm** on your OS.
 4. Extract the release (or continue directly with step #5 if you just cloned the GitHub repository).
-5. Follow the quick start from source on [Windows](#quick-start-from-source-on-windows) or [Linux and macOS](#quick-start-from-source-on-linux-and-macos) examples.
+5. Follow the [quick start from source](#quick-start-from-source) examples.
 
-#### Quick start from source on Windows
+#### Quick start from source
 
-1. Move to the directory (e.g: slashing-guard) where you have unpacked or cloned your Slashing Guard app
-
-```
-cd slashing-guard
-```
-
-2. Copy [.env.example](./.env.example) to `.env` and [configure](#configuration) as needed
-3. Start the Slashing Guard app from source:
-
-```
-npm i
-npm run start:dev
-```
-
-#### Quick start from source on Linux and macOS
-
-1. Move to the directory (e.g: slashing-guard) where you have unpacked or cloned your Slashing Guard app
+1. Move to the directory (e.g: slashing-guard) where you have unpacked or cloned the Slashing Guard app
 
 ```
 cd slashing-guard
@@ -199,34 +190,29 @@ npm run start:dev
 
 #### Build your Docker image locally
 
-You can build your Docker image also locally from source as follows:
+You can also build your Docker image locally from source as follows:
 
-1. Move to the directory (e.g: slashing-guard) where you have unpacked or cloned your Slashing Guard app
+1. Move to the directory (e.g: slashing-guard) where you have unpacked or cloned the Slashing Guard app
 
 ```
 cd slashing-guard
 ```
 
-1. Give your docker image a name (e.g: slashing-guard)
-
-```
-docker build -t slashing-guard .
-```
-
 2. Copy [.env.example](./.env.example) to `.env` and [configure](#configuration) as needed
-3. Start the Slashing Guard app from your local Docker build:
+3. Copy [docker-compose.yaml.example](./docker-compose.yaml.example) to `docker-compose.yaml`
+4. Build your docker image:
 
 ```
-docker run --env-file .env slashing-guard
+docker compose --project-name slashing-guard build
 ```
 
-Or by docker compose (recommended):
+5. Start the Slashing Guard app from your local Docker build:
 
 ```
-docker compose --project-name dev-slashing-guard -f docker-compose.dev.yaml up
+docker compose --project-name slashing-guard up
 ```
 
-In both cases you can stop the Docker container by typing `CTRL+C` in your active terminal.
+You can stop the Docker container by typing `CTRL+C` in your active terminal.
 
 ## Telegram Bot
 
@@ -249,7 +235,7 @@ To unsubscribe, the user need to run `/stop@BOTNAME` inside the bot chat.
 ### Group Subscription
 
 It is also possible to receive alert notifications for a whole group.
-To do so, add the bot to a group and subscribe the group
+To do so, add the bot to a group and subscribe the group.
 
 First you need to search for the bot name (you got from BotFather) in the Telegram user list or by requesting http://t.me/BOTNAME and assign the bot to your group.
 
@@ -267,19 +253,21 @@ In addition to the alert notification that are retrieved after a user or group i
 Bot commands always start with a slash (**/**) and Telegram also provides a UI for that.
 
 - In the bot chat a menu icon lists bot commands
+
   ![Menu Icon](./docs/menuicon.jpg)
 
 - In the group chat a slash icon lists bot commands
+
   ![Slash Icon](./docs/slashicon.jpg)
 
-Currently the SLashing Guard bot supports the folloowing commands:
+Currently the Slashing Guard bot supports the folloowing commands:
 
-| Name     | Description                              |
-| -------- | ---------------------------------------- |
-| start    | Subscribe a user or group to the bot     |
-| status   | Get current service status               |
-| operator | Get operator details                     |
-| stop     | Unsubscribe a user or group from the bot |
+| Name     | Description                                                                           |
+| -------- | ------------------------------------------------------------------------------------- |
+| start    | Subscribe a [user](#user-subscription) or [group](#group-subscription) to the bot     |
+| status   | Get current service status                                                            |
+| operator | Get operator details                                                                  |
+| stop     | Unsubscribe a [user](#user-subscription) or [group](#group-subscription) from the bot |
 
 All commands must be pre-fixed with a slash and su-fixed with "@" and the bot name (e.g: `/start@botname`)
 
