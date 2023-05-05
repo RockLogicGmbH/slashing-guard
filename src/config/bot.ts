@@ -3,7 +3,7 @@ import { markdownv2 as format } from "telegram-format";
 import appConfig from ".";
 import Group from "../data/Group";
 import User from "../data/User";
-import { messages } from "../shared/constants";
+import { core, messages } from "../shared/constants";
 import db from "./db";
 import kapi from "./kapi";
 import logger from "./logger";
@@ -64,10 +64,11 @@ bot.command("status", async (ctx) => {
   const numGroups = (await groups.find()).length;
   const fails = await FailedMessagesDB.find();
   const numFailsOpen = Object.values(fails).reduce((acc, arr) => acc + arr.length, 0);
-  const currentSlashedValidators = await eth.getStateValidators({
+  const currentSlashedValidators = await eth.getStateValidatorsChunked({
     stateId: "head",
     validatorIds: operatorKeys.map((ky) => ky.key),
     status: fakeKeys ? [] : ["active_slashed", "exited_slashed"],
+    chunkSize: core.VALIDATORS_CHUNKSIZE,
   });
   if (fakeKeys) {
     currentSlashedValidators["data"] = currentSlashedValidators.data.filter((item) =>

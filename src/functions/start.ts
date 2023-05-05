@@ -6,12 +6,12 @@ import logger from "../config/logger";
 import SlashedValidator from "../data/SlashedValidator";
 import { notifyToAll } from "../services/notify";
 import { notifyToFailed } from "../services/notify";
+import { core } from "../shared/constants";
 
 const operatorName = appConfig.operatorName;
 const fakeKeys = appConfig.fakeKeys;
 const validatorChains = appConfig.validatorChains;
 const slashedValidatorsDB = new SlashedValidator(db);
-const getStateValidatosChunkSize = 500;
 
 export const startLoop = async (init = false) => {
   try {
@@ -43,7 +43,7 @@ export const startLoop = async (init = false) => {
       stateId: "head",
       validatorIds: operatorKeys.map((ky) => ky.key),
       status: fakeKeys ? [] : ["active_slashed", "exited_slashed"],
-      chunkSize: getStateValidatosChunkSize,
+      chunkSize: core.VALIDATORS_CHUNKSIZE,
     });
 
     if (fakeKeys) {
@@ -67,7 +67,7 @@ export const startLoop = async (init = false) => {
         stateId: "head",
         validatorIds: pastSlashedValidatorPubKeys.map((ky) => ky),
         status: [],
-        chunkSize: getStateValidatosChunkSize,
+        chunkSize: core.VALIDATORS_CHUNKSIZE,
       });
 
       pastSlashedValidators = pastSlashedValidatorsRes.data;
