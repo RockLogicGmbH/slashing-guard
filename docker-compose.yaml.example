@@ -7,6 +7,7 @@ services:
     container_name: slashing-guard
     image: stereum/slashing-guard:latest
     restart: always
+    build: .
     volumes:
       - ./database:/database
     env_file: .env

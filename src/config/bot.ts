@@ -76,8 +76,8 @@ bot.command("status", async (ctx) => {
     );
   }
   const numSlashedValidators = currentSlashedValidators.data.length;
-
-  const message = [
+  logger.debug(kapiStatus);
+  let message = [
     //`${format.bold("Date")}: ${format.italic(new Date().toLocaleString())}`,
     `${format.bold("Bot")}: ${format.escape(ctx.me.username)}`,
     `${format.bold("Operator")}: ${format.escape(operatorName)}`,
@@ -87,15 +87,20 @@ bot.command("status", async (ctx) => {
     `${format.bold("Subscribed Users")}: ${numUsers}`,
     `${format.bold("Subscribed Groups")}: ${numGroups}`,
     `${format.bold("Failed Messages")}: ${numFailsOpen}`,
-    `${format.escape("**********")}`,
-    `${format.bold("Epoch")}: ${kapiStatus.clBlockSnapshot.epoch}`,
-    `${format.bold("Root")}: ${kapiStatus.clBlockSnapshot.root}`,
-    `${format.bold("Slot")}: ${kapiStatus.clBlockSnapshot.slot}`,
-    `${format.bold("Block Number")}: ${kapiStatus.clBlockSnapshot.blockNumber}`,
-    `${format.bold("Block Hash")}: ${kapiStatus.clBlockSnapshot.blockHash}`,
-  ].join("\n");
+  ];
+  if (kapiStatus.clBlockSnapshot) {
+    const message2 = [
+      `${format.escape("**********")}`,
+      `${format.bold("Epoch")}: ${kapiStatus.clBlockSnapshot.epoch}`,
+      `${format.bold("Root")}: ${kapiStatus.clBlockSnapshot.root}`,
+      `${format.bold("Slot")}: ${kapiStatus.clBlockSnapshot.slot}`,
+      `${format.bold("Block Number")}: ${kapiStatus.clBlockSnapshot.blockNumber}`,
+      `${format.bold("Block Hash")}: ${kapiStatus.clBlockSnapshot.blockHash}`,
+    ];
+    message = [...message, ...message2];
+  }
 
-  await ctx.reply(message, { parse_mode: "MarkdownV2" });
+  await ctx.reply(message.join("\n"), { parse_mode: "MarkdownV2" });
 });
 
 bot.command("operator", async (ctx) => {
