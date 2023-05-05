@@ -68,10 +68,12 @@ class KApi {
     return res.data.data.operators;
   }
 
-  async findOperatorKeys(operatorIndex: number) {
+  async findOperatorKeys(operatorIndex: number, used = false) {
+    const strUsed = used == true ? "true" : "false";
     const res = await this.agent.get<GetOperatorKeysResponse>(`/v1/modules/1/operators/keys`, {
       params: {
         operatorIndex,
+        strUsed,
       },
     });
 
