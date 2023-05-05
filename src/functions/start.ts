@@ -11,6 +11,7 @@ const operatorName = appConfig.operatorName;
 const fakeKeys = appConfig.fakeKeys;
 const validatorChains = appConfig.validatorChains;
 const slashedValidatorsDB = new SlashedValidator(db);
+const getStateValidatosChunkSize = 500;
 
 export const startLoop = async (init = false) => {
   try {
@@ -36,12 +37,13 @@ export const startLoop = async (init = false) => {
     const validatorUrl =
       validatorChain && validatorChain.hasOwnProperty("url") ? validatorChain.url : "https://beaconcha.in/validator/";
 
-    const operatorKeys = await kapi.findOperatorKeys(operatorIndex);
+    const operatorKeys = await kapi.findOperatorKeys(operatorIndex, true);
 
-    const currentSlashedValidators = await eth.getStateValidators({
+    const currentSlashedValidators = await eth.getStateValidatorsChunked({
       stateId: "head",
       validatorIds: operatorKeys.map((ky) => ky.key),
       status: fakeKeys ? [] : ["active_slashed", "exited_slashed"],
+      chunkSize: getStateValidatosChunkSize,
     });
 
     if (fakeKeys) {
@@ -61,10 +63,11 @@ export const startLoop = async (init = false) => {
 
     let pastSlashedValidators;
     if (pastSlashedValidatorPubKeys.length) {
-      const pastSlashedValidatorsRes = await eth.getStateValidators({
+      const pastSlashedValidatorsRes = await eth.getStateValidatorsChunked({
         stateId: "head",
         validatorIds: pastSlashedValidatorPubKeys.map((ky) => ky),
         status: [],
+        chunkSize: getStateValidatosChunkSize,
       });
 
       pastSlashedValidators = pastSlashedValidatorsRes.data;
