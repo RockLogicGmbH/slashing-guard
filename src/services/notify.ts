@@ -82,7 +82,7 @@ export const notify = async (
   }
   if (logTxt) {
     if (groupUpgraded) {
-      logger.trace(`Successfully sent message to ${subscribers}`);
+      logger.info(`Successfully sent message to ${subscribers}`);
     } else {
       logger.trace(`Text for all messages was:\n${text}`);
     }
