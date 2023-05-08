@@ -11,7 +11,12 @@ const users = new User(db);
 const groups = new Group(db);
 const failedMessages = new FailedMessage(db);
 
-export const notify = async (publicKeys: string[], text: string, subscribers: number | number[] | null = null) => {
+export const notify = async (
+  publicKeys: string[],
+  text: string,
+  subscribers: number | number[] | null = null,
+  groupUpgraded: boolean = false
+) => {
   const telegramUsers = await users.find();
   const telegramGroups = await groups.find();
   if (subscribers == null) {
@@ -38,6 +43,8 @@ export const notify = async (publicKeys: string[], text: string, subscribers: nu
       if (error instanceof GrammyError) {
         const errnum = error.error_code;
         const errmsg = error.description;
+        const errmth = error.method;
+        const errprm = error.parameters;
         if (errnum == 403) {
           if (telegramId < 0) {
             groups.delete(telegramId);
@@ -45,6 +52,21 @@ export const notify = async (publicKeys: string[], text: string, subscribers: nu
             users.delete(telegramId);
           }
           logger.debug(`Unsubscribed ${telegramId} because the bot is blocked ([${errnum}]: ${errmsg})`);
+        } else if (errnum == 400 && errmsg.includes("group chat was upgraded to a supergroup chat")) {
+          logger.error(`Failed to send message with slashed validator(s) to ${telegramId} ([${errnum}]: ${errmsg})`);
+          if (errprm.hasOwnProperty("migrate_to_chat_id") && errprm.migrate_to_chat_id && !groupUpgraded) {
+            const chatId = errprm.migrate_to_chat_id;
+            await groups.delete(telegramId);
+            await failedMessages.deleteAll(telegramId);
+            await groups.add(chatId);
+            logger.info(`Upgraded group ${telegramId} to supergroup ${chatId} - retry message to ${chatId}`);
+            await notify(publicKeys, text, chatId, true);
+            logTxt = true;
+          } else {
+            groups.delete(telegramId);
+            const reason = groupUpgraded ? "error persists after supergroup upgrade" : "no supergroup id available";
+            logger.info(`Unsubscribed ${telegramId} because ${reason}`);
+          }
         } else {
           failedTelegramIds.push(telegramId);
           logger.error(`Failed to send message with slashed validator(s) to ${telegramId} ([${errnum}]: ${errmsg})`);
@@ -59,7 +81,11 @@ export const notify = async (publicKeys: string[], text: string, subscribers: nu
     logger.trace(`Added or updated alert messages that failed to send to db for re-attempt on next run`);
   }
   if (logTxt) {
-    logger.trace(`Text for all messages was:\n${text}`);
+    if (groupUpgraded) {
+      logger.trace(`Successfully sent message to ${subscribers}`);
+    } else {
+      logger.trace(`Text for all messages was:\n${text}`);
+    }
   }
 };
 
