@@ -4,5 +4,6 @@ export const messages = {
 };
 
 export const core = {
+  MONITORING_INTERVAL: 12,
   VALIDATORS_CHUNKSIZE: 500,
 };
