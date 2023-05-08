@@ -3,6 +3,8 @@ import bot from "./config/bot";
 import logger from "./config/logger";
 import { startLoop } from "./functions/start";
 import { GrammyError } from "grammy";
+import VALIDATE from "./functions/validate";
+import { core } from "./shared/constants";
 
 logger.info(`Starting Slashing Guard (with log level: ${logger.level})`);
 
@@ -23,7 +25,7 @@ bot.start({
         },
       ]);
       await startLoop(true);
-      schedule.scheduleJob("*/12 * * * * *", async () => {
+      schedule.scheduleJob(`*/${VALIDATE.interval(core.MONITORING_INTERVAL)} * * * * *`, async () => {
         await startLoop();
       });
     } catch (error: unknown) {
@@ -31,14 +33,14 @@ bot.start({
         const errnum = error.error_code;
         const errmsg = error.description;
         const errmth = error.method;
-        const errmprm = error.parameters;
-        const bansec = errmprm.retry_after;
+        const errprm = error.parameters;
+        const bansec = errprm.retry_after;
         if (errnum == 429) {
           logger.debug(
             `App blocked by Telegram API for spamming too many requests - ${bansec} seconds left ([${errnum}]: ${errmsg})`
           );
         } else {
-          logger.debug(`Grammy Error [${errnum}]: ${errmsg} (Method: ${errmth}] | Parameters: ${errmprm}])`);
+          logger.debug(`Grammy Error [${errnum}]: ${errmsg} (Method: ${errmth}] | Parameters: ${errprm}])`);
         }
       } else {
         logger.error(error);
