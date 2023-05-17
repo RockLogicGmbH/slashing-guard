@@ -1,4 +1,4 @@
-# Slashing Guard
+![final_SG_banner](https://github.com/stereum-dev/slashing-guard/assets/82385103/932747b4-df29-465f-bf76-538b5cd005cc)
 
 Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO node operators that will alarm your team instantly via [Telegram](https://telegram.org/) if a validator is getting slashed.
 
