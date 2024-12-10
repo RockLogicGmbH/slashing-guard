@@ -33,7 +33,7 @@ Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO 
 
 # Requirements and Prerequisites
 
-Before you start with the Slashing Guard applicaton you need:
+Before you start with the Slashing Guard application you need:
 
 1. API access to a **fully synced** Ethereum Beacon node ([Consensus Client](https://ethereum.org/en/developers/docs/nodes-and-clients/#consensus-clients))
 2. API access to a running [LIDO KAPI service](https://github.com/lidofinance/lido-keys-api)
@@ -57,7 +57,7 @@ As soon as the prerequisites are done, the [Slashing Guard setup can start](#usa
 
 # Usage
 
-There are multiple ways you can configure and run the Slashing Guard application. While [the recommended setup for production environments is Docker](#run-with-docker), it is also possible to [run the app directly from source with NodeJS](#run-from-source), which is mostly preferred for develpment on your local system, however also an absolutely valid setup for production.
+There are multiple ways you can configure and run the Slashing Guard application. While [the recommended setup for production environments is Docker](#run-with-docker), it is also possible to [run the app directly from source with NodeJS](#run-from-source), which is mostly preferred for development on your local system, however also an absolutely valid setup for production.
 
 ## Configuration
 
@@ -70,7 +70,7 @@ The Slashing Guard [options](#options) must be configured either thru a .env [co
 | TELEGRAM_BOT_TOKEN | YourBotToken          | Yes      | The token received by Telegrams BotFather on bot creation       |
 | ETH_URL            | http://localhost:5051 | Yes      | The URL to your Beacon node API (Consensus Client)              |
 | KAPI_URL           | http://localhost:3600 | Yes      | The URL to your LIDO Keys API (KAPI)                            |
-| OPERATOR_NAME      | YourLidoOperatorName  | Yes      | Official LIDO node operator name (availabe thru KAPI service)   |
+| OPERATOR_NAME      | YourLidoOperatorName  | Yes      | Official LIDO node operator name (available thru KAPI service)   |
 | LOG_LEVEL          | info                  | No       | Log Level: "fatal", "error", "warn", "info", "debug" or "trace" |
 | FAKE_KEYS          | `<string:empty>`      | No       | For development and debugging (see description in .env.example) |
 
@@ -218,7 +218,7 @@ You can stop the Docker container by typing `CTRL+C` in your active terminal.
 
 As soon as Slashing Guard is [up and running](#quick-start-with-docker) your bot is available in [Telegram](https://telegram.org/).
 
-[Users](#user-subscription) and [groups](#group-subscription) can get alarmed instantly from the bot if one of your validators got slashed - both require a subscrbtion.
+[Users](#user-subscription) and [groups](#group-subscription) can get alarmed instantly from the bot if one of your validators got slashed - both require a subscription.
 
 ### User Subscription
 
@@ -228,7 +228,7 @@ Telegram is usually providing a "Start" button to run `/start@BOTNAME` automatic
 
 From now the bot is subscribed and alert notifications will be sent to the user.
 
-To unsubscribe, the user need to run `/stop@BOTNAME` inside the bot chat.
+To unsubscribe, the user needs to run `/stop@BOTNAME` inside the bot chat.
 
 > Replace BOTNAME with the name you received for your bot by BotFather
 
@@ -260,7 +260,7 @@ Bot commands always start with a slash (**/**) and Telegram also provides a UI f
 
   ![Slash Icon](./docs/slashicon.jpg)
 
-Currently the Slashing Guard bot supports the folloowing commands:
+Currently the Slashing Guard bot supports the following commands:
 
 | Name     | Description                                                                           |
 | -------- | ------------------------------------------------------------------------------------- |
@@ -291,7 +291,7 @@ This document will explain all further steps assuming you are using [VSCode](htt
 
 ### Pull Requests
 
-To improve the Slashing Guard code please follow this steps:
+To improve the Slashing Guard code please follow these steps:
 
 1. Fork the project
 2. Create your feature branch:
@@ -305,7 +305,7 @@ To improve the Slashing Guard code please follow this steps:
 
 ### Unit Testing and Linting
 
-All pull requests running thru automated tests. It is recommended to run this tests locally before you open a pull request.
+All pull requests running thru automated tests. It is recommended to run these tests locally before you open a pull request.
 
 - Setup your local development environment, thus you're able to [run from source](#run-from-source)
 - Execute `npm i` to install packages (before you run the commands below!)
@@ -314,7 +314,7 @@ All pull requests running thru automated tests. It is recommended to run this te
 
 ### Style Guide
 
-If you use the [recommended software and extensions](#recommended-software) usually everything is already auto formated and/or code issues are announced in the "Problems" tab of [VSCode](https://code.visualstudio.com/).
+If you use the [recommended software and extensions](#recommended-software) usually everything is already auto formatted and/or code issues are announced in the "Problems" tab of [VSCode](https://code.visualstudio.com/).
 
 However, here are a few hints you may follow to keep your code clean and pass automated tests:
 
