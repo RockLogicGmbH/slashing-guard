@@ -1,17 +1,17 @@
-![final_SG_banner](https://github.com/stereum-dev/slashing-guard/assets/82385103/932747b4-df29-465f-bf76-538b5cd005cc)
+![final_SG_banner](https://github.com/RockLogicGmbH/slashing-guard/assets/82385103/932747b4-df29-465f-bf76-538b5cd005cc)
 
 Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO node operators that will alarm your team instantly via [Telegram](https://telegram.org/) if a validator is getting slashed.
 
 # Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Requirements and Prerequisites](#requirements-and-prerequisites)
-
-* [Usage](#usage)
+- [Usage](#usage)
   - [Configuration](#configuration)
     - [Options](#options)
     - [Config file](#config-file)
     - [Environment variables](#environment-variables)
-  - [Getting Started](#getting-started)
+  - [Getting started](#getting-started)
     - [Run with Docker](#run-with-docker)
       - [Images](#images)
       - [Quick start with Docker](#quick-start-with-docker)
@@ -21,15 +21,13 @@ Slashing Guard is a [monitoring service](docs/slashing-guard-flow.png) for LIDO 
   - [Telegram Bot](#telegram-bot)
     - [User Subscription](#user-subscription)
     - [Group Subscription](#group-subscription)
-    - [Bot Commands](#bot-commands)
-
+  - [Bot Commands](#bot-commands)
 - [Contributing](#contributing)
-  - [Recommended Software](#recommended-software)
-  - [Pull Requests](#pull-requests)
-  - [Unit Testing and Linting](#unit-testing-and-linting)
-  - [Style Guide](#style-guide)
-
-* [Contact](#contact)
+    - [Recommended Software](#recommended-software)
+    - [Pull Requests](#pull-requests)
+    - [Unit Testing and Linting](#unit-testing-and-linting)
+    - [Style Guide](#style-guide)
+- [Contact](#contact)
 
 # Requirements and Prerequisites
 
@@ -114,7 +112,7 @@ The recommended setup for production environments is to [run the Slashing Guard 
 ### Run with Docker
 
 1. Verify that all [requirements and prerequisites](#requirements-and-prerequisites) are met.
-2. Pull the Slashing Guard Docker Image ([stereum/slashing-guard](https://hub.docker.com/r/stereum/slashing-guard/tags)) from Docker Hub and follow the [quick start with Docker](#quick-start-with-docker) or [build your Docker image locally](#build-your-docker-image-locally).
+2. Pull the Slashing Guard Docker Image ([rocklogicgmbh/slashing-guard](https://hub.docker.com/r/rocklogicgmbh/slashing-guard/tags)) from Docker Hub and follow the [quick start with Docker](#quick-start-with-docker) or [build your Docker image locally](#build-your-docker-image-locally).
 
 #### Images
 
@@ -133,13 +131,13 @@ cd slashing-guard
 2. Copy [.env.example](./.env.example) to `.env` and [configure](#configuration) as needed
 
 ```
-wget -O .env https://raw.githubusercontent.com/stereum-dev/slashing-guard/main/.env.example
+wget -O .env https://raw.githubusercontent.com/RockLogicGmbH/slashing-guard/main/.env.example
 ```
 
 3. Copy [docker-compose.yaml.example](./docker-compose.yaml.example) to `docker-compose.yaml`
 
 ```
-wget -O docker-compose.yaml https://raw.githubusercontent.com/stereum-dev/slashing-guard/main/docker-compose.yaml.example
+wget -O docker-compose.yaml https://raw.githubusercontent.com/RockLogicGmbH/slashing-guard/main/docker-compose.yaml.example
 ```
 
 4. Start the Slashing Guard Docker container (detached):
@@ -166,7 +164,7 @@ See the [Telegram Bot](#telegram-bot) section to do so.
 
 ### Run from source
 
-1. Download a release from the [releases page](https://github.com/stereum-dev/slashing-guard/releases) (or clone the GitHub repository).
+1. Download a release from the [releases page](https://github.com/RockLogicGmbH/slashing-guard/releases) (or clone the GitHub repository).
 2. Refer to the [official NodeJS docs](https://nodejs.org/en/docs) to install [NodeJS >= 16](https://nodejs.org/en/download) on your OS.
 3. Refer to the [official npm docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install **npm** on your OS.
 4. Extract the release (or continue directly with step #5 if you just cloned the GitHub repository).
