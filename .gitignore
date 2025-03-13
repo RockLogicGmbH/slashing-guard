@@ -135,5 +135,5 @@ dist
 # App
 docker-compose.yaml
 docker-compose.dev.yaml
-package-lock.json
+#package-lock.json
 database
