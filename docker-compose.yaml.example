@@ -5,7 +5,7 @@ version: "3.7"
 services:
   slashing-guard:
     container_name: slashing-guard
-    image: stereum/slashing-guard:latest
+    image: rocklogicgmbh/slashing-guard:latest
     restart: always
     build: .
     volumes:
